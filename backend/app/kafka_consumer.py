@@ -178,14 +178,22 @@ class KafkaConsumerService:
 
     async def start(self):
         """Start the Kafka consumer."""
-        self.consumer = AIOKafkaConsumer(
-            self.topic,
-            bootstrap_servers=self.bootstrap_servers,
-            group_id=self.group_id,
-            auto_offset_reset='earliest',  # Start from beginning if no offset
-            enable_auto_commit=True,
-            value_deserializer=lambda m: m  # Keep as bytes, we'll parse manually
-        )
+        consumer_config = {
+            'bootstrap_servers': self.bootstrap_servers,
+            'group_id': self.group_id,
+            'auto_offset_reset': 'earliest',
+            'enable_auto_commit': True,
+            'value_deserializer': lambda m: m
+        }
+
+        # Add SASL auth if credentials provided (for Upstash)
+        if settings.kafka_username and settings.kafka_password:
+            consumer_config['sasl_mechanism'] = settings.kafka_sasl_mechanism
+            consumer_config['security_protocol'] = settings.kafka_security_protocol
+            consumer_config['sasl_plain_username'] = settings.kafka_username
+            consumer_config['sasl_plain_password'] = settings.kafka_password
+
+        self.consumer = AIOKafkaConsumer(self.topic, **consumer_config)
         await self.consumer.start()
         logger.info(f"Kafka consumer started: {self.bootstrap_servers}, topic: {self.topic}")
 

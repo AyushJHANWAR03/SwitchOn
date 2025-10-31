@@ -81,12 +81,21 @@ class KafkaProducerService:
 
     async def start(self):
         """Start the Kafka producer."""
-        self.producer = AIOKafkaProducer(
-            bootstrap_servers=self.bootstrap_servers,
-            value_serializer=lambda v: json.dumps(v).encode('utf-8'),
-            compression_type='gzip',
-            acks='all'  # Wait for all replicas
-        )
+        producer_config = {
+            'bootstrap_servers': self.bootstrap_servers,
+            'value_serializer': lambda v: json.dumps(v).encode('utf-8'),
+            'compression_type': 'gzip',
+            'acks': 'all'
+        }
+
+        # Add SASL auth if credentials provided (for Upstash)
+        if settings.kafka_username and settings.kafka_password:
+            producer_config['sasl_mechanism'] = settings.kafka_sasl_mechanism
+            producer_config['security_protocol'] = settings.kafka_security_protocol
+            producer_config['sasl_plain_username'] = settings.kafka_username
+            producer_config['sasl_plain_password'] = settings.kafka_password
+
+        self.producer = AIOKafkaProducer(**producer_config)
         await self.producer.start()
         logger.info(f"Kafka producer started: {self.bootstrap_servers}")
 

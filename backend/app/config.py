@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     kafka_bootstrap_servers: str = "localhost:19092"
     kafka_topic_events: str = "inspection_events"
     kafka_consumer_group: str = "switchon-consumer-group"
+    kafka_username: str | None = None
+    kafka_password: str | None = None
+    kafka_sasl_mechanism: str = "PLAIN"
+    kafka_security_protocol: str = "PLAINTEXT"
 
     # API
     api_host: str = "0.0.0.0"
