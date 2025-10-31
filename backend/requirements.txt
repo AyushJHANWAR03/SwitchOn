@@ -1,0 +1,28 @@
+# Core
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Database
+sqlalchemy==2.0.23
+psycopg[binary]==3.1.18
+alembic==1.12.1
+
+# Kafka
+aiokafka==0.9.0
+
+# WebSocket
+python-socketio==5.10.0
+websockets==12.0
+
+# Utilities
+python-dotenv==1.0.0
+python-json-logger==2.0.7
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+httpx==0.25.1
+faker==20.1.0

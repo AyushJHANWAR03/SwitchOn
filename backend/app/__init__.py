@@ -1,0 +1,1 @@
+"""SwitchOn Backend Application."""
