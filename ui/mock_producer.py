@@ -2,9 +2,10 @@
 import streamlit as st
 import requests
 import json
+import os
 
 # Configuration
-API_URL = "http://localhost:8000"
+API_URL = os.getenv('API_URL', 'http://localhost:8000')
 
 st.set_page_config(
     page_title="SwitchOn Mock Producer",
